@@ -18,25 +18,25 @@ variable "nome_da_dupla" {
   default     = "Dupla Misteriosa"
 
   validation {
-    condition     = can(regex("^[^<>%&\\\\?/]{1,40}$", var.nome_da_dupla))
-    error_message = "Use de 1 a 40 caracteres, sem < > % & \\ ? /"
+    condition     = can(regex("^[^<>%&\\\\?/\"]{1,40}$", var.nome_da_dupla))
+    error_message = "Use de 1 a 40 caracteres, sem < > % & \\ ? / ou aspas."
   }
 }
 
 variable "emoji" {
   description = "Emoji que representa a dupla."
   type        = string
-  default     = "🚀"
+  default     = "🤖"
 }
 
-variable "cor_de_fundo" {
-  description = "Cor de fundo do site no formato #RRGGBB."
+variable "cor_neon" {
+  description = "Cor neon de destaque do site, no formato #RRGGBB."
   type        = string
-  default     = "#1e3a8a"
+  default     = "#fcee0a"
 
   validation {
-    condition     = can(regex("^#[0-9a-fA-F]{6}$", var.cor_de_fundo))
-    error_message = "A cor precisa estar no formato #RRGGBB, por exemplo \"#e11d48\"."
+    condition     = can(regex("^#[0-9a-fA-F]{6}$", var.cor_neon))
+    error_message = "A cor precisa estar no formato #RRGGBB, por exemplo \"#00f0ff\"."
   }
 }
 

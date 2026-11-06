@@ -3,23 +3,13 @@
 # Uso: ./checkpoint.sh 1   (de 1 a 6)
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
-# shellcheck source=lib/comum.sh
-source lib/comum.sh
+# shellcheck source=../lib/comum.sh
+source ../lib/comum.sh
+
+RG_NOME="rg-missao-iac"  # o mesmo nome de main.tf
 
 MISSAO="${1:-}"
 [[ "$MISSAO" =~ ^[1-6]$ ]] || falhar "Use: ./checkpoint.sh NÚMERO (de 1 a 6)"
-
-medalha() { # $1 = título, $2 = palavra-código
-  printf '\n%s' "$VERDE"
-  echo "  =================================================="
-  echo "    MISSÃO $MISSAO COMPLETA: $1"
-  echo
-  echo "    Palavra-código: $2"
-  echo
-  echo "    Levante a mão e mostre esta tela ao professor."
-  echo "  =================================================="
-  printf '%s\n' "$RESET"
-}
 
 # Confere se todos os sites respondem 200. $1 = quantidade mínima de sites.
 conferir_sites() {
@@ -49,11 +39,11 @@ case "$MISSAO" in
     ok "Terraform instalado"
     [ -f azure.auto.tfvars ] || falhar "Falta rodar ./embarque.sh"
     ok "Embarque feito (região $(grep regiao azure.auto.tfvars | cut -d'"' -f2))"
-    medalha "Embarque" "NUVEM"
+    medalha "$MISSAO" "Embarque" "NUVEM"
     ;;
   2)
     conferir_sites 1
-    medalha "Primeiro site no ar" "DEPLOY"
+    medalha "$MISSAO" "Primeiro site no ar" "DEPLOY"
     ;;
   3)
     NOME=$(terraform output -raw nome_da_dupla 2>/dev/null)
@@ -65,20 +55,20 @@ case "$MISSAO" in
     curl -s --max-time 15 "$PRIMEIRO" | grep -qF "$NOME" \
       || falhar "O site ainda não mostra \"$NOME\". Rodou terraform apply depois de salvar?"
     ok "O site mostra \"$NOME\""
-    medalha "Personalizado" "ESTILO"
+    medalha "$MISSAO" "Personalizado" "ESTILO"
     ;;
   4)
     conferir_sites 3
-    medalha "Escalou" "ESCALA"
+    medalha "$MISSAO" "Escalou" "ESCALA"
     ;;
   5)
     [ -f .caos_registro ] || falhar "O ataque ainda não aconteceu. Espere o sinal do professor e rode ./caos.sh"
     conferir_sites 1
     ok "Todos os servidores sobreviveram ao ataque"
-    medalha "Sobreviveu ao caos" "FÊNIX"
+    medalha "$MISSAO" "Sobreviveu ao caos" "FÊNIX"
     ;;
   6)
-    [ -f terraform.tfstate ] || falhar "Estado do Terraform não encontrado. Você está na pasta missao-iac-azure?"
+    [ -f terraform.tfstate ] || falhar "Estado do Terraform não encontrado. Você está na pasta aula-1-site?"
     RESTANTES=$(terraform state list 2>/dev/null | wc -l | tr -d ' ')
     [ "$RESTANTES" = "0" ] || falhar "Ainda existem $RESTANTES recurso(s). Rode 'terraform destroy' e digite yes."
     ok "O Terraform não gerencia mais nada"
@@ -86,6 +76,6 @@ case "$MISSAO" in
       falhar "O grupo $RG_NOME ainda existe na Azure. Rode 'terraform destroy' de novo."
     fi
     ok "Nada sobrou na Azure: custo zero"
-    medalha "Faxina completa" "FAXINA"
+    medalha "$MISSAO" "Faxina completa" "FAXINA"
     ;;
 esac

@@ -5,8 +5,10 @@
 # O que faz: apaga o grupo rg-missao-iac inteiro na Azure e limpa o estado local.
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
-# shellcheck source=lib/comum.sh
-source lib/comum.sh
+# shellcheck source=../lib/comum.sh
+source ../lib/comum.sh
+
+RG_NOME="rg-missao-iac"  # o mesmo nome de main.tf
 
 aviso "Isto vai APAGAR o grupo ${NEGRITO}${RG_NOME}${RESET} inteiro e o estado do Terraform."
 read -r -p "Digite SIM (maiúsculo) para continuar: " RESPOSTA

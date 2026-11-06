@@ -1,4 +1,4 @@
-# Missão: Servidores sob Ataque
+# Aula 1: Servidores sob Ataque
 
 ## Guia do Aluno
 
@@ -15,11 +15,15 @@ Hoje você vai criar servidores na Azure sem clicar em nada no portal, só com c
 
 - A cada missão, vocês **trocam de papel**.
 - Ao final de cada missão aparece uma **palavra-código**. Levante a mão e mostre ao professor para marcar no placar.
+- **Só o computador do piloto abre o terminal.** O copiloto acompanha o guia sem abrir o Cloud Shell, porque a faculdade tem um limite de terminais abertos ao mesmo tempo.
 
 **Dicas do terminal**
 
-- **Colar:** `Ctrl + Shift + V` (ou botão direito, *Colar*)
-- **Abrir um link:** segure `Ctrl` (no Mac, `Cmd`) e clique no link
+- **Colar:** `Ctrl + V` (no Mac, `Cmd + V`). Se não funcionar, use o botão direito e *Colar*.
+- **Abrir um link:** segure `Ctrl` (no Mac, `Cmd`) e clique no link.
+- **Não aperte `Ctrl + C` enquanto um comando estiver rodando:** sem texto selecionado, isso interrompe o comando.
+
+> **Importante:** não feche a aba do terminal até o fim da aula e não fique mais de 15 minutos sem digitar nada nele. Se o Cloud Shell fechar, ele apaga os arquivos e o Terraform perde o registro do que criou.
 
 ---
 
@@ -33,8 +37,8 @@ Existem dois caminhos. **Na aula usamos o Caminho A.** O Caminho B mostra como f
 
 O Cloud Shell é o terminal da própria Azure. Ele já vem logado na sua conta e com o Terraform instalado.
 
-1. Abra **https://portal.azure.com** e entre com a **conta da faculdade**.
-2. No topo da tela, clique no ícone **`>_`** (Cloud Shell). *Alternativa: abra **https://shell.azure.com** em outra aba.*
+1. Abra uma **aba nova** do navegador, só para o terminal, e acesse **https://shell.azure.com**.
+2. Entre com a **conta da faculdade**. *Alternativa: em https://portal.azure.com, clique no ícone **`>_`** no topo da tela. Mas a aba própria é mais segura, porque navegar pelo portal não fecha o terminal por acidente.*
 3. Se perguntar **Bash ou PowerShell**, escolha **Bash**. *Se abrir em PowerShell, clique em **Alternar para Bash** (Switch to Bash) no topo do terminal.*
 4. Se perguntar sobre armazenamento, escolha **Nenhuma conta de armazenamento necessária** (No storage account required), selecione a assinatura e clique em **Aplicar**.
 5. No terminal, cole **uma linha por vez** e aperte `Enter`:
@@ -44,7 +48,7 @@ git clone https://github.com/0x03c1/missao-iac-azure.git
 ```
 
 ```bash
-cd missao-iac-azure
+cd missao-iac-azure/aula-1-site
 ```
 
 ```bash
@@ -78,7 +82,11 @@ az login --use-device-code
 az account show --query "{assinatura:name, usuario:user.name}" -o table
 ```
 
-8. Prepare o ambiente:
+8. Entre na pasta da aula e prepare o ambiente:
+
+```bash
+cd aula-1-site
+```
 
 ```bash
 ./embarque.sh
@@ -136,7 +144,7 @@ Quando aparecer `Enter a value:`, digite **`yes`** e aperte `Enter`. Leva de 1 a
 
 ### Passo 4: abrir o site
 
-Segure `Ctrl` e clique no link que apareceu em `sites`.
+Segure `Ctrl` e clique no link que apareceu em `sites`. Se o site não abrir de primeira, espere 1 minuto e recarregue a página.
 
 ### Passo 5: rode o apply de novo
 
@@ -168,16 +176,16 @@ Troquem de papel.
 code terraform.tfvars
 ```
 
-2. Mude **o que está entre aspas** em `nome_da_dupla`, `emoji`, `cor_de_fundo` e `lema`. Exemplo:
+2. Mude **o que está entre aspas** em `nome_da_dupla`, `emoji`, `cor_neon` e `lema`. Exemplo:
 
 ```hcl
 nome_da_dupla = "Ana e Leo"
-emoji         = "🦄"
-cor_de_fundo  = "#7c3aed"
+emoji         = "🦾"
+cor_neon      = "#ff2a6d"
 lema          = "Deploy ou nada!"
 ```
 
-3. Salve com **`Ctrl + S`**.
+3. Salve com **`Ctrl + S`** e feche o editor com **`Ctrl + Q`**.
 
 > **Se o comando `code` não abrir o editor**, use o nano:
 > 1. Rode `nano terraform.tfvars`.
@@ -252,7 +260,7 @@ terraform apply
 
 **Deve aparecer:** 3 links em `sites`. Abra os três.
 
-5. **Bônus:** no portal da Azure, abra **Grupos de recursos** e depois **rg-missao-iac**. Os servidores que vocês criaram sem clicar em nada estão lá.
+5. **Bônus:** numa **outra aba** (não feche o terminal!), abra **https://portal.azure.com**, depois **Grupos de recursos** e **rg-missao-iac**. Os servidores que vocês criaram sem clicar em nada estão lá.
 
 ```bash
 ./checkpoint.sh 4
@@ -331,13 +339,15 @@ Digite **`yes`**. Leva de 1 a 3 minutos.
 | Apareceu isto | Faça isto |
 |---|---|
 | Aviso amarelo `Argument is deprecated` | Nada. É um aviso, não um erro. Pode seguir. |
+| `Tenant User Over Quota` ao abrir o Cloud Shell | A faculdade atingiu o limite de terminais abertos. Feche qualquer outro Cloud Shell aberto (inclusive o do copiloto) e tente de novo em 1 minuto. Se continuar, avise o professor: sua dupla pode se juntar a outra ou usar o Caminho B. |
+| O Cloud Shell não inicia e fala em `Microsoft.CloudShell` | Em outra aba, abra https://portal.azure.com, depois **Assinaturas**, a sua assinatura, **Provedores de recursos**. Procure `Microsoft.CloudShell`, clique em **Registrar** e espere 1 minuto. |
 | `RequestDisallowedByAzure` | Sua conta não pode usar essa região. Rode `./embarque.sh westus2`, trocando `westus2` por uma região da lista que o embarque mostrou, e depois rode `terraform apply` de novo. |
 | `Você ainda não está logado na Azure` | No Codespaces, rode `az login --use-device-code`. No Cloud Shell, feche e abra o terminal de novo. |
 | `Permission denied` ao rodar `./algo.sh` | Rode com `bash` na frente, por exemplo `bash embarque.sh`. |
-| `No such file or directory` | Você está fora da pasta. No Cloud Shell, rode `cd ~/missao-iac-azure`. No Codespaces, rode `cd /workspaces/missao-iac-azure`. |
+| `No such file or directory` | Você está fora da pasta. No Cloud Shell, rode `cd ~/missao-iac-azure/aula-1-site`. No Codespaces, rode `cd /workspaces/missao-iac-azure/aula-1-site`. |
 | `No changes` mesmo depois de editar o arquivo | O arquivo não foi salvo. Volte ao editor e aperte `Ctrl + S`. |
 | O site mostra a versão antiga | Recarregue com `Ctrl + Shift + R` ou abra numa aba anônima. |
-| `Invalid value for variable` | Leia a mensagem. A cor deve estar no formato `"#RRGGBB"` e o nome não pode ter `< > % & ? /`. |
+| `Invalid value for variable` | Leia a mensagem. A cor deve estar no formato `"#RRGGBB"` e o nome não pode ter `< > % & ? /` nem aspas. |
 | O terminal reiniciou e a pasta sumiu, ou apareceu `already exists` | Chame o professor. Provavelmente será preciso rodar o `./resgate.sh`. |
 
 ---

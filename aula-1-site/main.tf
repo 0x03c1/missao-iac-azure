@@ -63,7 +63,7 @@ resource "azurerm_storage_blob" "pagina" {
   source_content = templatefile("${path.module}/site/index.html.tftpl", {
     nome   = var.nome_da_dupla
     emoji  = var.emoji
-    cor    = var.cor_de_fundo
+    cor    = var.cor_neon
     lema   = var.lema
     numero = count.index + 1
     regiao = var.regiao

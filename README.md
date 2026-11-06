@@ -1,50 +1,53 @@
-# Missão: Servidores sob Ataque
+# Missão IaC Azure
 
-Aula prática de Infraestrutura como Código (IaC) com Terraform na Microsoft Azure.
+Aulas práticas de Cloud Computing com Terraform, Azure e GitHub Actions.
 
-Disciplina de Cloud Computing, Tecnólogo em Análise e Desenvolvimento de Sistemas, Faculdade Senac.
+Tecnólogo em Análise e Desenvolvimento de Sistemas, Faculdade Senac.
 
-> Na aula passada, vocês criaram uma máquina virtual clicando no portal. Hoje vão criar, escalar, recuperar e destruir infraestrutura só com código.
+## As aulas
 
-## Como começar
+| Aula | Missão | O que vocês vão construir | Guia |
+|---|---|---|---|
+| 1 | Servidores sob Ataque | Sites na Azure criados só com código, escalados e restaurados depois de um ataque | [aula-1-site/GUIA.md](aula-1-site/GUIA.md) |
+| 2 | Memória da Rede | Um servidor de aplicação com banco de dados SQLite, e o que acontece com os dados num apagão | [aula-2-banco/GUIA.md](aula-2-banco/GUIA.md) |
+| 3 | Pipeline | Um pipeline de CI/CD no GitHub que testa e publica o mural sozinho | [aula-3-cicd/GUIA.md](aula-3-cicd/GUIA.md) |
 
-Abra o [GUIA-DO-ALUNO.md](GUIA-DO-ALUNO.md) e siga as missões. Você não precisa instalar nada. Existem duas formas de rodar:
+## Como rodar
+
+Você não precisa instalar nada. Existem duas formas:
 
 | Caminho | Onde | Login na Azure |
 |---|---|---|
-| **A** (usado em aula) | Azure Cloud Shell: o terminal do próprio portal da Azure | Automático |
+| **A** (usado em aula) | Azure Cloud Shell (https://shell.azure.com): o terminal do próprio portal da Azure | Automático |
 | **B** (alternativa) | GitHub Codespaces | `az login --use-device-code` |
-
-## As 6 missões
-
-| # | Missão | Conceito |
-|---|---|---|
-| 1 | Embarque | Terminal na nuvem, autenticação, regiões |
-| 2 | Primeiro site no ar | `init`, `plan`, `apply`, código declarativo, idempotência |
-| 3 | Personalize | Variáveis, mudança incremental |
-| 4 | Escale para 3 | `count`, escalabilidade |
-| 5 | Caos | Estado, drift, recuperação de desastre |
-| 6 | Faxina | `destroy`, custo na nuvem |
 
 ## O que é criado na Azure
 
-Cada "servidor" é uma conta de armazenamento (Storage Account) com site estático habilitado e duas páginas HTML: a principal e a de erro. Tudo fica dentro do grupo de recursos `rg-missao-iac`.
+| Aula | Recursos | Grupo de recursos | Custo |
+|---|---|---|---|
+| 1 | Contas de armazenamento com site estático | `rg-missao-iac` | Centavos |
+| 2 e 3 | App Service (plano F1, gratuito) com Python 3.12 e SQLite em `/home` | `rg-missao-banco` | Zero no plano F1 |
 
-O custo é de centavos, desde que tudo seja destruído no fim da aula, que é justamente a Missão 6.
+Toda aula termina com a missão **Faxina**, que apaga tudo.
 
-## Arquivos
+## Estrutura
 
-| Arquivo | Conteúdo |
+| Pasta ou arquivo | Conteúdo |
 |---|---|
-| `main.tf` | O que existe na nuvem |
-| `variables.tf` | Os "botões de ajuste" |
-| `terraform.tfvars` | O único arquivo que você edita |
-| `outputs.tf` | O que aparece no fim do apply (links dos sites) |
-| `providers.tf` | Providers Azure e random |
-| `site/` | Modelos das páginas: principal e de erro |
-| `embarque.sh` | Prepara o terminal e escolhe uma região permitida para a conta |
-| `checkpoint.sh` | Confere cada missão e mostra a palavra-código |
-| `caos.sh` | Derruba um servidor aleatório |
-| `resgate.sh` | Limpa tudo se o estado do Terraform se perder |
+| `aula-1-site/` | Terraform dos sites estáticos, páginas e scripts da Aula 1 |
+| `aula-2-banco/` | Terraform do App Service, o app do mural (`app/`) e scripts da Aula 2 |
+| `aula-3-cicd/` | Scripts que conectam o GitHub à Azure (Aula 3) |
+| `.github/workflows/pipeline.yml` | O pipeline de CI/CD: testes e deploy do mural |
+| `lib/` | Funções compartilhadas pelos scripts |
 | `.devcontainer/` | Ambiente do Codespaces (Terraform e Azure CLI) |
-| `extras/vm-da-aula-passada/` | A VM da aula anterior escrita em Terraform (só para leitura) |
+| `extras/vm-da-aula-passada/` | A VM da aula de máquinas virtuais escrita em Terraform (só para leitura) |
+
+## Rodar o mural no seu computador
+
+Com Python 3 instalado:
+
+```bash
+cd aula-2-banco/app
+python app.py              # abre em http://localhost:8000
+python -m unittest -v      # roda os testes
+```

@@ -8,8 +8,16 @@ crash.log
 # Gerado pelo ./embarque.sh (contém o ID da assinatura de cada aluno)
 azure.auto.tfvars
 
-# Gerado pelo ./caos.sh
+# Gerado pelos scripts de caos
 .caos_registro
+.apagao_registro
+.experimento_registro
+
+# Aula 2: pacote do deploy e arquivos de execução local
+.pacote/
+__pycache__/
+*.db
+aula-2-banco/app/VERSAO
 
 # Sistema
 .DS_Store

@@ -4,8 +4,9 @@
 # Só rode quando o professor der o sinal.
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
-# shellcheck source=lib/comum.sh
-source lib/comum.sh
+# shellcheck source=../lib/comum.sh
+source ../lib/comum.sh
+
 
 CONTAS=()
 SITES=()

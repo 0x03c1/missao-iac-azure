@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Servidor ${numero} comprometido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root { --alerta: #ff2a6d; --ciano: #00f0ff; --verde: #05ffa1; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100vh; }
+  body {
+    display: grid; place-items: center; padding: 24px; color: #ffd6e2; overflow-x: hidden;
+    font-family: "Share Tech Mono", ui-monospace, Menlo, Consolas, monospace;
+    background:
+      repeating-linear-gradient(0deg, rgba(255, 42, 109, .05) 0 2px, transparent 2px 4px),
+      radial-gradient(ellipse at center, #2b0613 0%, #060004 70%);
+  }
+  .alerta {
+    position: relative; width: 100%; max-width: 680px; padding: 30px 26px; text-align: center;
+    background: rgba(20, 0, 8, .9); border: 1px solid var(--alerta);
+    box-shadow: 0 0 40px rgba(255, 42, 109, .45);
+    animation: falha 2.2s infinite steps(1);
+  }
+  @keyframes falha {
+    0%, 92% { transform: none; }
+    94% { transform: translate(-4px, 1px); }
+    96% { transform: translate(4px, -2px); }
+  }
+  .faixa {
+    font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: #000;
+    background: var(--alerta); padding: 6px 10px; margin: -30px -26px 22px;
+  }
+  .caveira { font-size: 76px; line-height: 1; filter: drop-shadow(0 0 14px var(--alerta)); }
+  h1 {
+    margin: 14px 0; color: var(--alerta); font-family: Orbitron, sans-serif; font-weight: 900;
+    font-size: clamp(24px, 6vw, 42px); text-transform: uppercase; letter-spacing: .05em;
+    text-shadow: 3px 0 var(--ciano), -3px 0 #fcee0a;
+  }
+  p { font-size: 17px; line-height: 1.6; margin: 8px 0; }
+  strong { color: #fff; }
+  .terminal { margin-top: 22px; padding: 14px 16px; text-align: left; border: 1px dashed var(--ciano); background: #000; }
+  .terminal p { color: var(--ciano); font-size: 15px; }
+  code { display: block; margin: 6px 0; color: var(--verde); font-size: 17px; }
+  code::before { content: "$ "; color: rgba(5, 255, 161, .5); }
+</style>
+</head>
+<body>
+  <main class="alerta">
+    <div class="faixa">Conexão perdida // intrusão detectada</div>
+    <div class="caveira">💀</div>
+    <h1>Servidor 0${numero} comprometido</h1>
+    <p>Um ataque apagou a página da dupla <strong>${nome}</strong>.</p>
+    <p>Se esta infraestrutura tivesse sido criada na mão, alguém teria que lembrar de cada clique.</p>
+    <div class="terminal">
+      <p>Mas ela é código. Para restaurar, rode no terminal:</p>
+      <code>terraform plan</code>
+      <code>terraform apply</code>
+    </div>
+  </main>
+</body>
+</html>

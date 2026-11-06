@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${nome} // Servidor ${numero}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: ${cor};
+    --ciano: #00f0ff;
+    --rosa: #ff2a6d;
+    --fundo: #07070d;
+    --texto: #e6e6f0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100vh; }
+  body {
+    display: grid; place-items: center; padding: 24px; color: var(--texto); overflow-x: hidden;
+    font-family: "Share Tech Mono", ui-monospace, Menlo, Consolas, monospace;
+    background:
+      linear-gradient(rgba(0, 240, 255, .07) 1px, transparent 1px) 0 0 / 44px 44px,
+      linear-gradient(90deg, rgba(0, 240, 255, .07) 1px, transparent 1px) 0 0 / 44px 44px,
+      radial-gradient(ellipse at 50% -10%, #2a0d45 0%, var(--fundo) 65%);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 3px);
+  }
+  .moldura {
+    position: relative; width: 100%; max-width: 680px; padding: 28px 28px 24px; text-align: center;
+    background: rgba(10, 10, 20, .86); border: 1px solid var(--neon);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--neon) 35%, transparent), inset 0 0 40px rgba(0, 0, 0, .6);
+  }
+  .moldura::before, .moldura::after {
+    content: ""; position: absolute; width: 26px; height: 26px; border: 3px solid var(--neon);
+  }
+  .moldura::before { top: -7px; left: -7px; border-right: 0; border-bottom: 0; }
+  .moldura::after { bottom: -7px; right: -7px; border-left: 0; border-top: 0; }
+  .barra {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--ciano);
+    border-bottom: 1px dashed rgba(0, 240, 255, .35); padding-bottom: 12px;
+  }
+  .status i {
+    display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%;
+    background: #05ffa1; box-shadow: 0 0 10px #05ffa1; animation: pisca 1.4s infinite;
+  }
+  @keyframes pisca { 50% { opacity: .25; } }
+  .avatar {
+    width: 128px; height: 128px; margin: 26px auto 6px; display: grid; place-items: center;
+    font-size: 72px; line-height: 1; border: 2px solid var(--neon);
+    clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+    background: color-mix(in srgb, var(--neon) 14%, transparent);
+    animation: flutua 3s ease-in-out infinite;
+  }
+  @keyframes flutua { 50% { transform: translateY(-8px); } }
+  .glitch {
+    position: relative; margin: 16px 0 6px; color: var(--neon);
+    font-family: Orbitron, "Share Tech Mono", sans-serif; font-weight: 900;
+    font-size: clamp(28px, 7vw, 50px); text-transform: uppercase; letter-spacing: .04em;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--neon) 70%, transparent);
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-texto); position: absolute; inset: 0; opacity: .85;
+  }
+  .glitch::before { color: var(--ciano); transform: translateX(-3px); animation: corte 2.7s infinite steps(1); }
+  .glitch::after { color: var(--rosa); transform: translateX(3px); animation: corte 3.3s infinite steps(1) reverse; }
+  @keyframes corte {
+    0% { clip-path: inset(0 0 85% 0); }
+    20% { clip-path: inset(45% 0 35% 0); }
+    40% { clip-path: inset(80% 0 4% 0); }
+    60% { clip-path: inset(12% 0 70% 0); }
+    80% { clip-path: inset(60% 0 22% 0); }
+    100% { clip-path: inset(0 0 85% 0); }
+  }
+  .lema { margin: 0 0 24px; font-size: 18px; color: var(--ciano); }
+  .cursor { animation: pisca 1s infinite steps(1); }
+  .info { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; text-align: left; }
+  .info div {
+    padding: 12px 14px; background: rgba(0, 240, 255, .06); border-left: 3px solid var(--neon);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+  }
+  .info small { display: block; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(230, 230, 240, .6); }
+  .info strong { font-size: 17px; color: var(--texto); }
+  footer { margin-top: 22px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: rgba(230, 230, 240, .55); }
+</style>
+</head>
+<body>
+  <main class="moldura">
+    <header class="barra">
+      <span class="status"><i></i>Online</span>
+      <span>SRV-0${numero} // ${regiao}</span>
+    </header>
+    <div class="avatar">${emoji}</div>
+    <h1 class="glitch" data-texto="${nome}">${nome}</h1>
+    <p class="lema">&gt; ${lema}<span class="cursor">_</span></p>
+    <section class="info">
+      <div><small>Região</small><strong>${regiao}</strong></div>
+      <div><small>Provisionado por</small><strong>Terraform</strong></div>
+      <div><small>Cliques no portal</small><strong>0</strong></div>
+    </section>
+    <footer>IaC // Faculdade Senac // Análise e Desenvolvimento de Sistemas</footer>
+  </main>
+</body>
+</html>
