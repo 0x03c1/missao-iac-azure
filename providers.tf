@@ -1,11 +1,6 @@
-# ============================================================
-#  providers.tf — "Quais ferramentas o Terraform vai usar?"
-# ============================================================
-#  Um "provider" é o tradutor entre o Terraform e uma nuvem.
-#  Aqui usamos dois:
-#    - azurerm : fala com a Microsoft Azure
-#    - random  : gera nomes aleatórios (nomes de storage são únicos no mundo todo)
-# ============================================================
+# Providers: os "tradutores" entre o Terraform e cada plataforma.
+#   azurerm: fala com a Microsoft Azure
+#   random:  gera sufixos aleatórios (nomes de storage são únicos no mundo todo)
 
 terraform {
   required_version = ">= 1.6.0"
@@ -25,11 +20,10 @@ terraform {
 provider "azurerm" {
   features {}
 
-  # Preenchido automaticamente pelo ./embarque.sh (arquivo azure.auto.tfvars)
+  # Preenchido pelo ./embarque.sh no arquivo azure.auto.tfvars
   subscription_id = var.subscription_id
 
-  # Não deixa o Terraform tentar registrar dezenas de serviços na assinatura
-  # (isso deixaria o primeiro apply muito lento). O ./embarque.sh já registrou
-  # o único serviço que usamos nesta aula: Microsoft.Storage.
+  # O ./embarque.sh já registra o único serviço usado (Microsoft.Storage).
+  # Sem esta linha, o primeiro apply tentaria registrar dezenas de serviços.
   resource_provider_registrations = "none"
 }

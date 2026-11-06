@@ -1,30 +1,25 @@
-# ============================================================
-#  variables.tf — "Quais valores podem mudar?"
-# ============================================================
-#  Variáveis são os "botões de ajuste" da infraestrutura.
-#  Você NÃO precisa editar este arquivo.
-#  Para mudar os valores, edite o arquivo terraform.tfvars
-# ============================================================
+# Variáveis: os "botões de ajuste" da infraestrutura.
+# Não edite este arquivo. Para mudar valores, edite o terraform.tfvars.
 
 variable "subscription_id" {
-  description = "ID da assinatura Azure (o ./embarque.sh descobre sozinho)."
+  description = "ID da assinatura Azure (definido pelo ./embarque.sh)."
   type        = string
 }
 
 variable "regiao" {
-  description = "Região da Azure onde tudo será criado (o ./embarque.sh escolhe uma permitida)."
+  description = "Região da Azure (o ./embarque.sh escolhe uma permitida para a conta)."
   type        = string
   default     = "eastus"
 }
 
 variable "nome_da_dupla" {
-  description = "Nome que aparece no site."
+  description = "Nome exibido no site."
   type        = string
   default     = "Dupla Misteriosa"
 
   validation {
     condition     = can(regex("^[^<>%&\\\\?/]{1,40}$", var.nome_da_dupla))
-    error_message = "Use de 1 a 40 caracteres e não use < > % & \\ ? /"
+    error_message = "Use de 1 a 40 caracteres, sem < > % & \\ ? /"
   }
 }
 
@@ -52,7 +47,7 @@ variable "lema" {
 }
 
 variable "quantidade_de_servidores" {
-  description = "Quantos sites (servidores) idênticos criar."
+  description = "Quantos sites idênticos criar."
   type        = number
   default     = 1
 

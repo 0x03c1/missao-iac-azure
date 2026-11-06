@@ -1,13 +1,8 @@
-# ============================================================
-#  main.tf — "O QUE eu quero que exista na nuvem"
-# ============================================================
-#  Repare: em nenhum lugar dizemos "clique aqui, depois ali".
-#  Só DECLARAMOS o resultado final. O Terraform descobre
-#  sozinho o que precisa criar, mudar ou apagar.
-# ============================================================
+# O QUE deve existir na nuvem.
+# Em nenhum lugar dizemos "clique aqui, depois ali": só declaramos o resultado.
+# O Terraform descobre sozinho o que precisa criar, alterar ou apagar.
 
 locals {
-  # Etiquetas (tags) coladas em tudo que for criado — ajudam a achar e a cobrar.
   etiquetas = {
     missao     = "iac-senac"
     dupla      = var.nome_da_dupla
@@ -15,20 +10,15 @@ locals {
   }
 }
 
-# ------------------------------------------------------------
-# 1) Grupo de recursos: a "pasta" que guarda tudo da missão.
-#    (Atenção: os scripts lib/comum.sh usam este mesmo nome.)
-# ------------------------------------------------------------
+# 1. Grupo de recursos: a "pasta" que guarda tudo da missão.
+#    O nome também é usado em lib/comum.sh.
 resource "azurerm_resource_group" "missao" {
   name     = "rg-missao-iac"
   location = var.regiao
   tags     = local.etiquetas
 }
 
-# ------------------------------------------------------------
-# 2) Um sufixo aleatório para cada servidor.
-#    Nomes de storage precisam ser únicos NO MUNDO INTEIRO.
-# ------------------------------------------------------------
+# 2. Sufixo aleatório para cada servidor.
 resource "random_string" "sufixo" {
   count   = var.quantidade_de_servidores
   length  = 8
@@ -36,10 +26,8 @@ resource "random_string" "sufixo" {
   special = false
 }
 
-# ------------------------------------------------------------
-# 3) O "servidor": uma conta de armazenamento da Azure.
-#    count = quantos iguais a este queremos.
-# ------------------------------------------------------------
+# 3. O "servidor": uma conta de armazenamento.
+#    count define quantas cópias iguais queremos.
 resource "azurerm_storage_account" "site" {
   count = var.quantidade_de_servidores
 
@@ -53,9 +41,7 @@ resource "azurerm_storage_account" "site" {
   tags = merge(local.etiquetas, { servidor = tostring(count.index + 1) })
 }
 
-# ------------------------------------------------------------
-# 4) Liga o modo "site estático" em cada servidor.
-# ------------------------------------------------------------
+# 4. Liga o modo "site estático" em cada servidor.
 resource "azurerm_storage_account_static_website" "site" {
   count = var.quantidade_de_servidores
 
@@ -64,10 +50,7 @@ resource "azurerm_storage_account_static_website" "site" {
   error_404_document = "erro.html"
 }
 
-# ------------------------------------------------------------
-# 5) A página principal (index.html) de cada servidor.
-#    O conteúdo vem do modelo site/index.html.tftpl
-# ------------------------------------------------------------
+# 5. Página principal, gerada a partir de site/index.html.tftpl
 resource "azurerm_storage_blob" "pagina" {
   count = var.quantidade_de_servidores
 
@@ -89,9 +72,7 @@ resource "azurerm_storage_blob" "pagina" {
   depends_on = [azurerm_storage_account_static_website.site]
 }
 
-# ------------------------------------------------------------
-# 6) A página de erro — aparece quando o site é "derrubado".
-# ------------------------------------------------------------
+# 6. Página de erro: aparece quando o site é "derrubado".
 resource "azurerm_storage_blob" "erro" {
   count = var.quantidade_de_servidores
 

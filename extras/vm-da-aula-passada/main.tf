@@ -1,13 +1,8 @@
-# ============================================================
-#  🖥️  A VM DA AULA PASSADA… EM CÓDIGO
-# ============================================================
-#  ⚠️  PARA PROJETAR NO FECHAMENTO — NÃO É PARA APLICAR EM AULA.
+# A VM da aula passada, escrita em código.
+# Para projetar no fechamento. NÃO é para aplicar em aula.
 #
-#  Cada bloco abaixo corresponde a uma ABA/CAMPO que vocês
-#  preencheram clicando no portal da Azure ao criar a VM.
-#  Compare: quantos cliques foram? Aqui são ~80 linhas que
-#  qualquer pessoa da equipe pode ler, revisar e repetir.
-# ============================================================
+# Cada bloco corresponde a uma aba ou campo preenchido no portal da Azure
+# ao criar a VM. Compare: quantos cliques foram?
 
 terraform {
   required_providers {
@@ -23,23 +18,27 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
-variable "subscription_id" { type = string }
+variable "subscription_id" {
+  type = string
+}
+
 variable "regiao" {
   type    = string
   default = "eastus"
 }
+
 variable "chave_publica_ssh" {
-  description = "Conteúdo da sua chave pública SSH (ex.: ~/.ssh/id_rsa.pub)"
+  description = "Conteúdo da chave pública SSH (ex.: ~/.ssh/id_rsa.pub)"
   type        = string
 }
 
-# Portal → aba "Básico" → "Grupo de recursos" → "Criar novo"
+# Portal, aba "Básico": Grupo de recursos > Criar novo
 resource "azurerm_resource_group" "aula" {
   name     = "rg-vm-aula-passada"
   location = var.regiao
 }
 
-# Portal → aba "Rede" → "Rede virtual" → "Criar nova"
+# Portal, aba "Rede": Rede virtual > Criar nova
 resource "azurerm_virtual_network" "rede" {
   name                = "vnet-aula"
   address_space       = ["10.0.0.0/16"]
@@ -47,7 +46,7 @@ resource "azurerm_virtual_network" "rede" {
   resource_group_name = azurerm_resource_group.aula.name
 }
 
-# Portal → aba "Rede" → "Sub-rede"
+# Portal, aba "Rede": Sub-rede
 resource "azurerm_subnet" "sub_rede" {
   name                 = "default"
   resource_group_name  = azurerm_resource_group.aula.name
@@ -55,7 +54,7 @@ resource "azurerm_subnet" "sub_rede" {
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-# Portal → aba "Rede" → "IP público"
+# Portal, aba "Rede": IP público
 resource "azurerm_public_ip" "ip" {
   name                = "ip-vm-aula"
   location            = azurerm_resource_group.aula.location
@@ -64,7 +63,7 @@ resource "azurerm_public_ip" "ip" {
   sku                 = "Standard"
 }
 
-# Portal → aba "Básico" → "Portas de entrada públicas" → SSH (22)
+# Portal, aba "Básico": Portas de entrada públicas > SSH (22)
 resource "azurerm_network_security_group" "firewall" {
   name                = "nsg-vm-aula"
   location            = azurerm_resource_group.aula.location
@@ -83,7 +82,7 @@ resource "azurerm_network_security_group" "firewall" {
   }
 }
 
-# Criado "escondido" pelo portal: a placa de rede da VM
+# Criada automaticamente pelo portal: a placa de rede da VM
 resource "azurerm_network_interface" "placa" {
   name                = "nic-vm-aula"
   location            = azurerm_resource_group.aula.location
@@ -102,8 +101,8 @@ resource "azurerm_network_interface_security_group_association" "liga_firewall" 
   network_security_group_id = azurerm_network_security_group.firewall.id
 }
 
-# Portal → aba "Básico" → nome, imagem, tamanho, usuário e chave SSH
-#          aba "Discos" → tipo de disco do SO
+# Portal, aba "Básico": nome, imagem, tamanho, usuário e chave SSH
+# Portal, aba "Discos": tipo de disco do sistema operacional
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = "vm-aula-passada"
   location              = azurerm_resource_group.aula.location
@@ -130,7 +129,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 }
 
-# Portal → tela "Visão geral" → "Endereço IP público"
+# Portal, tela "Visão geral": Endereço IP público
 output "ip_publico" {
   value = azurerm_public_ip.ip.ip_address
 }

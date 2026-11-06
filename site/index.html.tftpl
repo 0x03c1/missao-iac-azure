@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${emoji} ${nome} · Servidor #${numero}</title>
+<title>${nome} · Servidor ${numero}</title>
 <style>
   :root { --cor: ${cor}; }
   * { box-sizing: border-box; }
@@ -17,7 +17,7 @@
     background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.25); border-radius: 24px;
     box-shadow: 0 20px 60px rgba(0,0,0,.35); backdrop-filter: blur(6px);
   }
-  .emoji { font-size: 96px; line-height: 1; display: block; animation: flutua 2.4s ease-in-out infinite; }
+  .emoji { display: block; font-size: 96px; line-height: 1; animation: flutua 2.4s ease-in-out infinite; }
   @keyframes flutua {
     0%, 100% { transform: translateY(0) rotate(-4deg); }
     50% { transform: translateY(-14px) rotate(4deg); }
@@ -38,13 +38,13 @@
 <body>
   <main class="cartao">
     <div class="emoji">${emoji}</div>
-    <div class="selo">Servidor #${numero} · no ar ✅</div>
+    <div class="selo">Servidor ${numero} · no ar</div>
     <h1>${nome}</h1>
-    <p class="lema">“${lema}”</p>
+    <p class="lema">"${lema}"</p>
     <section class="info">
       <div><small>Região Azure</small><strong>${regiao}</strong></div>
       <div><small>Criado por</small><strong>Terraform</strong></div>
-      <div><small>Cliques no portal</small><strong>0 🙌</strong></div>
+      <div><small>Cliques no portal</small><strong>0</strong></div>
     </section>
     <footer>Infraestrutura como Código · Faculdade Senac · Análise e Desenvolvimento de Sistemas</footer>
   </main>
