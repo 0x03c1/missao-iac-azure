@@ -1,0 +1,2 @@
+# Sem dependências: o mural usa só a biblioteca padrão do Python.
+# O arquivo existe para o App Service reconhecer a aplicação como Python.
