@@ -42,6 +42,7 @@ resource "azurerm_storage_account" "site" {
 }
 
 # 4. Liga o modo "site estático" em cada servidor.
+#    Isso cria o contêiner especial "$web", onde ficam as páginas.
 resource "azurerm_storage_account_static_website" "site" {
   count = var.quantidade_de_servidores
 
@@ -54,11 +55,10 @@ resource "azurerm_storage_account_static_website" "site" {
 resource "azurerm_storage_blob" "pagina" {
   count = var.quantidade_de_servidores
 
-  name                   = "index.html"
-  storage_account_name   = azurerm_storage_account.site[count.index].name
-  storage_container_name = "$web"
-  type                   = "Block"
-  content_type           = "text/html; charset=utf-8"
+  name                 = "index.html"
+  storage_container_id = "${azurerm_storage_account.site[count.index].id}/blobServices/default/containers/$web"
+  type                 = "Block"
+  content_type         = "text/html; charset=utf-8"
 
   source_content = templatefile("${path.module}/site/index.html.tftpl", {
     nome   = var.nome_da_dupla
@@ -76,11 +76,10 @@ resource "azurerm_storage_blob" "pagina" {
 resource "azurerm_storage_blob" "erro" {
   count = var.quantidade_de_servidores
 
-  name                   = "erro.html"
-  storage_account_name   = azurerm_storage_account.site[count.index].name
-  storage_container_name = "$web"
-  type                   = "Block"
-  content_type           = "text/html; charset=utf-8"
+  name                 = "erro.html"
+  storage_container_id = "${azurerm_storage_account.site[count.index].id}/blobServices/default/containers/$web"
+  type                 = "Block"
+  content_type         = "text/html; charset=utf-8"
 
   source_content = templatefile("${path.module}/site/erro.html.tftpl", {
     nome   = var.nome_da_dupla

@@ -130,8 +130,6 @@ terraform plan
 
 O `plan` é uma **prévia**: mostra o que seria criado. Nada foi criado ainda.
 
-> Se aparecer um aviso amarelo `Argument is deprecated`, pode ignorar. É um aviso, não um erro.
-
 ### Passo 3: criar de verdade
 
 ```bash
@@ -338,7 +336,6 @@ Digite **`yes`**. Leva de 1 a 3 minutos.
 
 | Apareceu isto | Faça isto |
 |---|---|
-| Aviso amarelo `Argument is deprecated` | Nada. É um aviso, não um erro. Pode seguir. |
 | `Tenant User Over Quota` ao abrir o Cloud Shell | A faculdade atingiu o limite de terminais abertos. Feche qualquer outro Cloud Shell aberto (inclusive o do copiloto) e tente de novo em 1 minuto. Se continuar, avise o professor: sua dupla pode se juntar a outra ou usar o Caminho B. |
 | O Cloud Shell não inicia e fala em `Microsoft.CloudShell` | Em outra aba, abra https://portal.azure.com, depois **Assinaturas**, a sua assinatura, **Provedores de recursos**. Procure `Microsoft.CloudShell`, clique em **Registrar** e espere 1 minuto. |
 | `RequestDisallowedByAzure` | Sua conta não pode usar essa região. Rode `./embarque.sh westus2`, trocando `westus2` por uma região da lista que o embarque mostrou, e depois rode `terraform apply` de novo. |

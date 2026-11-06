@@ -244,7 +244,6 @@ Digite **`yes`**. **Deve aparecer:** `Destroy complete! Resources: 4 destroyed.`
 
 | Apareceu isto | Faça isto |
 |---|---|
-| Aviso amarelo de `deprecated` | Nada. É um aviso, não um erro. |
 | `RequestDisallowedByAzure` | Região não permitida. Rode `./embarque.sh westus2`, trocando `westus2` por uma região da lista que o embarque mostrou, e depois `terraform apply` de novo. |
 | Erro de **quota** ou de plano `F1` indisponível no `apply` | Chame o professor. Ele pode pedir para tentar outra região ou usar o plano `B1`. |
 | O mural mostra **Application Error** ou não abre | Espere 2 minutos e recarregue: o servidor gratuito está acordando. Se passar de 5 minutos, chame o professor. |
