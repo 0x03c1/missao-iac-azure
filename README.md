@@ -6,7 +6,7 @@ Disciplina de Cloud Computing, Tecnólogo em Análise e Desenvolvimento de Siste
 
 > Na aula passada, vocês criaram uma máquina virtual clicando no portal. Hoje vão criar, escalar, recuperar e destruir infraestrutura só com código.
 
-## Para alunos
+## Como começar
 
 Abra o [GUIA-DO-ALUNO.md](GUIA-DO-ALUNO.md) e siga as missões. Você não precisa instalar nada. Existem duas formas de rodar:
 
@@ -14,14 +14,6 @@ Abra o [GUIA-DO-ALUNO.md](GUIA-DO-ALUNO.md) e siga as missões. Você não preci
 |---|---|---|
 | **A** (usado em aula) | Azure Cloud Shell: o terminal do próprio portal da Azure | Automático |
 | **B** (alternativa) | GitHub Codespaces | `az login --use-device-code` |
-
-## Para professores
-
-| Arquivo | Para quê |
-|---|---|
-| [CHECKLIST-VESPERA.md](CHECKLIST-VESPERA.md) | Mensagem para a turma, ensaio completo e conferência do laboratório |
-| [ROTEIRO-DO-PROFESSOR.md](ROTEIRO-DO-PROFESSOR.md) | Roteiro minuto a minuto, com falas, resultados esperados e planos B |
-| [extras/vm-da-aula-passada/main.tf](extras/vm-da-aula-passada/main.tf) | A VM da aula anterior escrita em Terraform, para projetar no fechamento |
 
 ## As 6 missões
 
@@ -46,7 +38,7 @@ O custo é de centavos, desde que tudo seja destruído no fim da aula, que é ju
 |---|---|
 | `main.tf` | O que existe na nuvem |
 | `variables.tf` | Os "botões de ajuste" |
-| `terraform.tfvars` | O único arquivo que os alunos editam |
+| `terraform.tfvars` | O único arquivo que você edita |
 | `outputs.tf` | O que aparece no fim do apply (links dos sites) |
 | `providers.tf` | Providers Azure e random |
 | `site/` | Modelos das páginas: principal e de erro |
@@ -55,4 +47,4 @@ O custo é de centavos, desde que tudo seja destruído no fim da aula, que é ju
 | `caos.sh` | Derruba um servidor aleatório |
 | `resgate.sh` | Limpa tudo se o estado do Terraform se perder |
 | `.devcontainer/` | Ambiente do Codespaces (Terraform e Azure CLI) |
-| `extras/` | Material só para projetar |
+| `extras/vm-da-aula-passada/` | A VM da aula anterior escrita em Terraform (só para leitura) |
