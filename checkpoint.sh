@@ -1,62 +1,54 @@
 #!/usr/bin/env bash
-# ============================================================
-#  CHECKPOINT — confere se a missão foi cumprida.
-#  Uso:  ./checkpoint.sh 1   (… até 6)
-#  Se der certo, aparece a PALAVRA-CÓDIGO para mostrar ao professor.
-# ============================================================
+# Confere se a missão foi cumprida e mostra a palavra-código.
+# Uso: ./checkpoint.sh 1   (de 1 a 6)
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
 # shellcheck source=lib/comum.sh
 source lib/comum.sh
 
 MISSAO="${1:-}"
-[[ "$MISSAO" =~ ^[1-6]$ ]] || falhar "Use: ./checkpoint.sh NÚMERO   (de 1 a 6)"
+[[ "$MISSAO" =~ ^[1-6]$ ]] || falhar "Use: ./checkpoint.sh NÚMERO (de 1 a 6)"
 
 medalha() { # $1 = título, $2 = palavra-código
   printf '\n%s' "$VERDE"
-  echo "  ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★"
-  echo "     🏅  MISSÃO $MISSAO COMPLETA — $1"
+  echo "  =================================================="
+  echo "    MISSÃO $MISSAO COMPLETA: $1"
   echo
-  echo "     🔑  Palavra-código:  $2"
+  echo "    Palavra-código: $2"
   echo
-  echo "     ✋  Levante a mão e mostre esta tela!"
-  echo "  ★━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━★"
+  echo "    Levante a mão e mostre esta tela ao professor."
+  echo "  =================================================="
   printf '%s\n' "$RESET"
 }
 
-# Confere se TODOS os sites respondem 200. Recebe a quantidade mínima.
+# Confere se todos os sites respondem 200. $1 = quantidade mínima de sites.
 conferir_sites() {
   local minimo="$1" urls url codigo total=0 falhas=0
   urls=$(lista_output sites)
-  if [ -z "$urls" ]; then
-    falhar "Ainda não existe nenhum site. Você já rodou 'terraform apply' e digitou yes?"
-  fi
+  [ -n "$urls" ] || falhar "Nenhum site encontrado. Você já rodou 'terraform apply' e digitou yes?"
   while read -r url; do
     total=$((total + 1))
     codigo=$(status_http "$url")
     if [ "$codigo" = "200" ]; then
-      ok "Servidor #$total no ar → $url"
+      ok "Servidor $total no ar: $url"
     else
-      erro "Servidor #$total NÃO respondeu (código $codigo) → $url"
+      erro "Servidor $total fora do ar (código $codigo): $url"
       falhas=$((falhas + 1))
     fi
   done <<< "$urls"
-  if [ "$total" -lt "$minimo" ]; then
-    falhar "Encontrei $total servidor(es), mas a missão pede $minimo. Mudou o terraform.tfvars e rodou apply?"
-  fi
-  if [ "$falhas" -gt 0 ]; then
-    falhar "Algum servidor está fora do ar. Rode 'terraform plan' para investigar."
-  fi
+  [ "$total" -ge "$minimo" ] \
+    || falhar "Encontrei $total servidor(es), a missão pede $minimo. Mudou o terraform.tfvars e rodou apply?"
+  [ "$falhas" -eq 0 ] || falhar "Há servidor fora do ar. Rode 'terraform plan' para investigar."
 }
 
 case "$MISSAO" in
   1)
-    az account show >/dev/null 2>&1 || falhar "Sem login na Azure. Você está no Cloud Shell?"
+    az account show >/dev/null 2>&1 || falhar "Sem login na Azure. Rode ./embarque.sh e siga as instruções."
     ok "Login na Azure"
-    command -v terraform >/dev/null || falhar "Terraform não encontrado"
+    command -v terraform >/dev/null || falhar "Terraform não encontrado."
     ok "Terraform instalado"
     [ -f azure.auto.tfvars ] || falhar "Falta rodar ./embarque.sh"
-    ok "Embarque feito ($(grep regiao azure.auto.tfvars | cut -d'"' -f2))"
+    ok "Embarque feito (região $(grep regiao azure.auto.tfvars | cut -d'"' -f2))"
     medalha "Embarque" "NUVEM"
     ;;
   2)
@@ -80,22 +72,20 @@ case "$MISSAO" in
     medalha "Escalou" "ESCALA"
     ;;
   5)
-    [ -f .caos_registro ] || falhar "O ataque ainda não aconteceu! Espere o sinal do professor e rode ./caos.sh"
+    [ -f .caos_registro ] || falhar "O ataque ainda não aconteceu. Espere o sinal do professor e rode ./caos.sh"
     conferir_sites 1
     ok "Todos os servidores sobreviveram ao ataque"
     medalha "Sobreviveu ao caos" "FÊNIX"
     ;;
   6)
-    [ -f terraform.tfstate ] || falhar "Não encontrei o estado do Terraform. Você está na pasta missao-iac-azure?"
+    [ -f terraform.tfstate ] || falhar "Estado do Terraform não encontrado. Você está na pasta missao-iac-azure?"
     RESTANTES=$(terraform state list 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$RESTANTES" != "0" ]; then
-      falhar "Ainda existem $RESTANTES recurso(s). Rode 'terraform destroy' e digite yes."
-    fi
+    [ "$RESTANTES" = "0" ] || falhar "Ainda existem $RESTANTES recurso(s). Rode 'terraform destroy' e digite yes."
     ok "O Terraform não gerencia mais nada"
     if [ "$(az group exists -n "$RG_NOME" 2>/dev/null)" = "true" ]; then
       falhar "O grupo $RG_NOME ainda existe na Azure. Rode 'terraform destroy' de novo."
     fi
-    ok "Nada sobrou na Azure — custo zero 💸"
+    ok "Nada sobrou na Azure: custo zero"
     medalha "Faxina completa" "FAXINA"
     ;;
 esac

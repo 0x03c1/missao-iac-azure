@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-# ============================================================
-#  RESGATE 🛟 — use SOMENTE se o professor pedir.
-#  Quando usar: o Cloud Shell reiniciou, o Terraform "esqueceu"
-#  o que tinha criado e o apply reclama que algo "already exists".
-#
-#  O que faz: apaga o grupo rg-missao-iac INTEIRO na Azure e
-#  limpa o estado local, para recomeçar do zero.
-# ============================================================
+# Resgate: use somente se o professor pedir.
+# Quando usar: o terminal reiniciou, o Terraform perdeu o estado e o apply
+# reclama que algo "already exists".
+# O que faz: apaga o grupo rg-missao-iac inteiro na Azure e limpa o estado local.
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
 # shellcheck source=lib/comum.sh
@@ -17,7 +13,7 @@ read -r -p "Digite SIM (maiúsculo) para continuar: " RESPOSTA
 [ "$RESPOSTA" = "SIM" ] || { echo "Cancelado. Nada foi apagado."; exit 0; }
 
 if [ "$(az group exists -n "$RG_NOME" 2>/dev/null)" = "true" ]; then
-  passo "Apagando $RG_NOME na Azure (pode levar de 1 a 3 minutos)…"
+  passo "Apagando $RG_NOME na Azure (de 1 a 3 minutos)"
   az group delete -n "$RG_NOME" --yes --only-show-errors || falhar "Não consegui apagar. Chame o professor."
   ok "Grupo apagado"
 else
@@ -27,4 +23,4 @@ fi
 rm -f terraform.tfstate terraform.tfstate.backup .caos_registro
 ok "Estado local limpo"
 
-printf '\n%s🛟 Resgate concluído!%s Agora rode:  %sterraform apply%s\n\n' "$VERDE" "$RESET" "$NEGRITO" "$RESET"
+printf '\n%sResgate concluído.%s Próximo passo: %sterraform apply%s\n\n' "$VERDE" "$RESET" "$NEGRITO" "$RESET"

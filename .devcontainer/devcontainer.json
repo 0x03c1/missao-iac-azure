@@ -1,0 +1,14 @@
+{
+  "name": "Missão IaC Azure",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["hashicorp.terraform"]
+    }
+  },
+  "postCreateCommand": "terraform -version && az version --query '\"azure-cli\"' -o tsv"
+}
