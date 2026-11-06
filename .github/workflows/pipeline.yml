@@ -1,0 +1,64 @@
+# Pipeline de CI/CD do mural (Aula 3).
+#
+# A cada push que muda a pasta aula-2-banco/app:
+#   1. roda os testes automáticos;
+#   2. se os testes passarem, publica o código no App Service da Azure.
+#
+# O passo 2 só acontece em quem configurou a variável AZURE_WEBAPP_NAME e o
+# segredo AZURE_WEBAPP_PUBLISH_PROFILE (o script aula-3-cicd/conectar-github.sh
+# faz isso). No repositório original, só os testes rodam.
+
+name: Pipeline do mural
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "aula-2-banco/app/**"
+      - ".github/workflows/pipeline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  testes:
+    name: 1. Testes automáticos
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aula-2-banco/app
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v5
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Rodar os testes
+        run: python -m unittest -v
+
+  deploy:
+    name: 2. Publicar na Azure
+    needs: testes
+    if: ${{ vars.AZURE_WEBAPP_NAME != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v5
+
+      - name: Gravar a versão publicada (commit)
+        run: echo "${GITHUB_SHA::7}" > aula-2-banco/app/VERSAO
+
+      - name: Publicar no App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: aula-2-banco/app
